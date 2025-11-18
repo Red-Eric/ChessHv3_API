@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Globalization;
 
 public class Komodo
 {
@@ -127,7 +128,8 @@ public class Komodo
                 if (fen.Split(' ')[1] == "b")
                     value = -value;
 
-                eval = type == "cp" ? (value / 100.0).ToString("+#0.##;-#0.##") : $"#{value}";
+                //eval = type == "cp" ? (value / 100.0).ToString("+#0.##;-#0.##") : $"#{value}";
+                eval = type == "cp" ? (value / 100.0).ToString("+#0.##;-#0.##", CultureInfo.InvariantCulture) : $"#{value}";
             }
 
             int pvIndex = Array.IndexOf(parts, "pv");
