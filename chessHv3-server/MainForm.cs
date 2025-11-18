@@ -26,7 +26,7 @@ public class MainForm : Form
         // Labels
         eloLabel = CreateLabel($"Elo: 3500", 20, 20);
         depthLabel = CreateLabel($"Depth: 10", 20, 90);
-        multipvLabel = CreateLabel($"MultiPV: 5", 20, 160);
+        multipvLabel = CreateLabel($"Arrows: 5", 20, 160);
 
         // Sliders
         eloSlider = CreateSlider(20, 50, 500, 3500, 3500);
@@ -35,7 +35,7 @@ public class MainForm : Form
 
         eloSlider.Scroll += (s, e) => eloLabel.Text = $"Elo: {eloSlider.Value}";
         depthSlider.Scroll += (s, e) => depthLabel.Text = $"Depth: {depthSlider.Value}";
-        multipvSlider.Scroll += (s, e) => multipvLabel.Text = $"MultiPV: {multipvSlider.Value}";
+        multipvSlider.Scroll += (s, e) => multipvLabel.Text = $"Arrows: {multipvSlider.Value}";
 
         // Apply button
         applyButton = new Button()
