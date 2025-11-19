@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.IO;
 using System.Windows.Forms;
 
 public class MainForm : Form
@@ -8,43 +9,91 @@ public class MainForm : Form
     public TrackBar eloSlider;
     public TrackBar depthSlider;
     public TrackBar multipvSlider;
+
     public Label eloLabel;
     public Label depthLabel;
     public Label multipvLabel;
+
+    public TextBox bookText;
+    public Button bookButton;
     public Button applyButton;
+
+    public string bookPath = null;
 
     public MainForm()
     {
         // Form settings
         this.Text = "ChessHv3 External Engine";
-        this.Width = 420;
-        this.Height = 300;
+        this.Width = 520;
+        this.Height = 420;
         this.BackColor = Color.FromArgb(35, 36, 40);
         this.FormBorderStyle = FormBorderStyle.FixedSingle;
         this.MaximizeBox = false;
 
         // Labels
         eloLabel = CreateLabel($"Elo: 3500", 20, 20);
-        depthLabel = CreateLabel($"Depth: 10", 20, 90);
-        multipvLabel = CreateLabel($"Arrows: 5", 20, 160);
+        depthLabel = CreateLabel($"Depth: 10", 20, 110);
+        multipvLabel = CreateLabel($"Arrows: 5", 20, 200);
 
         // Sliders
         eloSlider = CreateSlider(20, 50, 500, 3500, 3500);
-        depthSlider = CreateSlider(20, 120, 1, 20, 10);
-        multipvSlider = CreateSlider(20, 190, 2, 5, 5);
+        depthSlider = CreateSlider(20, 140, 1, 20, 10);
+        multipvSlider = CreateSlider(20, 230, 2, 5, 5);
 
         eloSlider.Scroll += (s, e) => eloLabel.Text = $"Elo: {eloSlider.Value}";
         depthSlider.Scroll += (s, e) => depthLabel.Text = $"Depth: {depthSlider.Value}";
         multipvSlider.Scroll += (s, e) => multipvLabel.Text = $"Arrows: {multipvSlider.Value}";
 
+        // Book Text Input (read-only)
+        bookText = new TextBox()
+        {
+            Text = "No book selected...",
+            Top = 280,
+            Left = 20,
+            Width = 280,
+            ReadOnly = true,
+            BackColor = Color.FromArgb(35, 36, 40),
+            ForeColor = Color.FromArgb(200, 200, 200),
+            BorderStyle = BorderStyle.FixedSingle
+        };
+
+        // Select Book Button
+        bookButton = new Button()
+        {
+            Text = "Select Book",
+            Width = 140,
+            Height = 25,
+            Top = 278,
+            Left = 310,
+            FlatStyle = FlatStyle.Flat,
+            Font = new Font("Segoe UI", 9, FontStyle.Bold),
+            BackColor = Color.FromArgb(114, 137, 218),
+            ForeColor = Color.White
+        };
+        bookButton.FlatAppearance.BorderSize = 0;
+
+        bookButton.Click += (s, e) =>
+        {
+            using (OpenFileDialog ofd = new OpenFileDialog())
+            {
+                ofd.Title = "Select Polyglot Book (.bin)";
+                ofd.Filter = "Polyglot Book (*.bin)|*.bin";
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    bookPath = ofd.FileName;
+                    bookText.Text = Path.GetFileName(bookPath);
+                }
+            }
+        };
+
         // Apply button
         applyButton = new Button()
         {
             Text = "Apply",
-            Width = 120,
+            Width = 160,
             Height = 40,
-            Top = 230,
-            Left = 140,
+            Top = 320,
+            Left = 170,
             FlatStyle = FlatStyle.Flat,
             Font = new Font("Segoe UI", 10, FontStyle.Bold),
             BackColor = Color.FromArgb(88, 101, 242),
@@ -58,9 +107,13 @@ public class MainForm : Form
         this.Controls.Add(eloLabel);
         this.Controls.Add(depthLabel);
         this.Controls.Add(multipvLabel);
+
         this.Controls.Add(eloSlider);
         this.Controls.Add(depthSlider);
         this.Controls.Add(multipvSlider);
+
+        this.Controls.Add(bookText);
+        this.Controls.Add(bookButton);
         this.Controls.Add(applyButton);
     }
 
@@ -84,7 +137,7 @@ public class MainForm : Form
             Minimum = min,
             Maximum = max,
             Value = value,
-            Width = 350,
+            Width = 450,
             Height = 45,
             Top = top,
             Left = left,

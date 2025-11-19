@@ -40,8 +40,13 @@ class Program
             engine.Elo = form.eloSlider.Value;
             engine.Depth = form.depthSlider.Value;
             engine.MultiPV = form.multipvSlider.Value;
+
+            if (!string.IsNullOrWhiteSpace(form.bookPath))
+                engine.SetBook(form.bookPath);
+
             MessageBox.Show($"Params applied:\nElo={engine.Elo}\nDepth={engine.Depth}\nMultiPV={engine.MultiPV}");
         };
+
 
         Task.Run(() => StartHttpServer(engine));
 

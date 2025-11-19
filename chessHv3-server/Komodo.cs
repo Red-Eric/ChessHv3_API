@@ -14,6 +14,7 @@ public class Komodo
     public int MultiPV { get; set; }
     public int Elo { get; set; }
 
+
     public Komodo(string enginePath, int elo = 2800, int depth = 10, int multipv = 5)
     {
         Elo = elo;
@@ -43,6 +44,12 @@ public class Komodo
         SendCommand($"setoption name MultiPV value {MultiPV}");
         SendCommand($"setoption name UCI Elo value {Elo}");
         SendCommand("setoption name Ponder value false");
+    }
+
+    public void SetBook(string path)
+    {
+        //setoption name Book File value {}
+        SendCommand($"setoption name Book File value {path}");
     }
 
     private void SendCommand(string cmd)
