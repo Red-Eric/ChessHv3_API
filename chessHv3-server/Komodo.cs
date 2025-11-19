@@ -68,7 +68,6 @@ public class Komodo
         }
     }
 
- 
     public List<Dictionary<string, string>> GetBestMoves(string fen)
     {
         var results = new List<Dictionary<string, string>>();
@@ -87,8 +86,21 @@ public class Komodo
         {
             Console.WriteLine(line);
 
-            if (line.StartsWith("bestmove"))
-                break;
+            if (line.StartsWith("info book move"))
+            {
+                string move = line.Split(' ')[4];
+                if (!seenMoves.Contains(move))
+                {
+                    results.Add(new Dictionary<string, string>
+                {
+                    { "from", move.Substring(0, 2) },
+                    { "to", move.Substring(2, 2) },
+                    { "eval", "book" }
+                });
+                    seenMoves.Add(move);
+                }
+                continue;
+            }
 
             if (line.StartsWith("info"))
             {
@@ -102,6 +114,9 @@ public class Komodo
                         lastDepth = currentDepth;
                 }
             }
+
+            if (line.StartsWith("bestmove"))
+                break;
         }
 
         foreach (var infoLine in infoLines)
@@ -128,7 +143,6 @@ public class Komodo
                 if (fen.Split(' ')[1] == "b")
                     value = -value;
 
-                //eval = type == "cp" ? (value / 100.0).ToString("+#0.##;-#0.##") : $"#{value}";
                 eval = type == "cp" ? (value / 100.0).ToString("+#0.##;-#0.##", CultureInfo.InvariantCulture) : $"#{value}";
             }
 
@@ -139,11 +153,11 @@ public class Komodo
                 if (!seenMoves.Contains(move))
                 {
                     results.Add(new Dictionary<string, string>
-                    {
-                        { "from", move.Substring(0,2) },
-                        { "to", move.Substring(2,2) },
-                        { "eval", eval }
-                    });
+                {
+                    { "from", move.Substring(0, 2) },
+                    { "to", move.Substring(2, 2) },
+                    { "eval", eval }
+                });
                     seenMoves.Add(move);
                 }
             }
